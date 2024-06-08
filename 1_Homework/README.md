@@ -49,7 +49,7 @@
 6. Все изменения должны быть зафиксированы и отправлены в ваш личный репозиторий.
 
 ## Ответы
-Скрипт - script.sh
+Скрипт - [script](https://github.com/karapuze/netology_ansible/blob/main/1_Homework/script.sh)
 
 Результат выполнения скрипта
 ![alt text](https://github.com/karapuze/netology_ansible/blob/main/1_Homework/img/Снимок%20экрана%202024-06-08%20в%2020.23.33.png)
