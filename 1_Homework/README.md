@@ -20,9 +20,17 @@
 
 1. ![alt text](https://github.com/karapuze/netology_ansible/blob/main/1_Homework/img/Снимок%20экрана%202024-06-08%20в%2019.18.17.png)
 2. ![alt text](https://github.com/karapuze/netology_ansible/blob/main/1_Homework/img/Снимок%20экрана%202024-06-08%20в%2019.17.33.png)
+
 3-4. ![alt text](https://github.com/karapuze/netology_ansible/blob/main/1_Homework/img/Снимок%20экрана%202024-06-08%20в%2018.50.41.png)
+
+
 5-8. ![alt text](https://github.com/karapuze/netology_ansible/blob/main/1_Homework/img/Снимок%20экрана%202024-06-08%20в%2019.08.05.png)
+
+
+
 9. ![alt text](https://github.com/karapuze/netology_ansible/blob/main/1_Homework/img/Снимок%20экрана%202024-06-08%20в%2019.11.47.png)
+
+
 10-11. ![alt text](https://github.com/karapuze/netology_ansible/blob/main/1_Homework/img/Снимок%20экрана%202024-06-08%20в%2019.14.15.png)
 12. Ответами на какие вопросы, в задании нет ни одного вопроса :)
 13. Скриншоты выше добавлены к каждому пункту
