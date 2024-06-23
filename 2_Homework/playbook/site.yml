@@ -1,0 +1,112 @@
+---
+- name: Install Clickhouse
+  hosts: clickhouse
+  handlers:
+    - name: Start clickhouse service
+      become: true
+      ansible.builtin.service:
+        name: clickhouse-server
+        state: restarted
+
+  tasks:
+
+    - name: Update apt cache
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install Clickhouse packages
+      become: true
+      ansible.builtin.apt:
+        name:
+          - clickhouse-client
+          - clickhouse-server
+          - clickhouse-common
+        state: present
+      notify: Start clickhouse service
+
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: Create database
+      become: true
+      ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+      register: create_db
+      failed_when: create_db.rc != 0 and create_db.rc != 82
+      changed_when: create_db.rc == 0
+
+- name: Install and configure Vector
+  hosts: Vector
+  become: true
+  handlers:
+    - name: Restart Vector
+      ansible.builtin.service:
+        name: vector
+        state: restarted
+      tags:
+        - restart
+
+  tasks:
+    - name: Download Vector
+      ansible.builtin.get_url:
+        url: https://packages.timber.io/vector/0.38.0/vector-0.38.0-x86_64-unknown-linux-musl.tar.gz
+        dest: /tmp/vector.tar.gz
+        mode: '0644'
+      tags:
+        - download
+
+    - name: Ensure the /etc/vector directory exists
+      ansible.builtin.file:
+        path: /etc/vector
+        state: directory
+        mode: '0755'
+
+    - name: Unarchive Vector
+      ansible.builtin.unarchive:
+        src: /tmp/vector.tar.gz
+        dest: /tmp/vector
+        remote_src: true
+        creates: /tmp/vector/vector
+      tags:
+        - unarchive
+
+    - name: Install Vector
+      ansible.builtin.command:
+        cmd: "mv /tmp/vector/vector /usr/local/bin/vector && chmod +x /usr/local/bin/vector"
+        creates: /usr/local/bin/vector
+      tags:
+        - install
+
+    - name: Create Vector systemd service file
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/vector.service
+        mode: '0755'
+        content: |
+          [Unit]
+          Description=Vector
+          Documentation=https://vector.dev
+          After=network-online.target
+
+          [Service]
+          User=root
+          Group=root
+          ExecStart=/usr/local/bin/vector --config /etc/vector/vector.toml
+          Restart=always
+          LimitNOFILE=65535
+
+          [Install]
+          WantedBy=multi-user.target
+      notify:
+        - Restart Vector
+      tags:
+        - systemd
+
+    - name: Configure Vector
+      ansible.builtin.template:
+        src: vector.toml.j2
+        dest: /etc/vector/vector.toml
+        mode: '0644'
+      notify:
+        - Restart Vector
+      tags:
+        - configure
