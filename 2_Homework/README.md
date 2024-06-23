@@ -15,3 +15,46 @@
 
 
 ## Ответы
+
+Этот Ansible playbook предназначен для автоматизации установки и настройки Clickhouse и Vector на удаленных серверах.
+
+## Что делает playbook?
+
+### Установка Clickhouse:
+- Обновляет кэш apt на целевых хостах.
+- Устанавливает пакеты Clickhouse (`clickhouse-client`, `clickhouse-server`, `clickhouse-common`).
+- Создает базу данных в Clickhouse с именем `logs`.
+
+### Установка и настройка Vector:
+- Скачивает архив с установочными файлами Vector с указанного URL.
+- Убеждается, что директория `/etc/vector` существует и имеет правильные права доступа.
+- Распаковывает архив с Vector в `/usr/local/bin` и устанавливает исполняемые права.
+- Создает systemd-службу для автозапуска Vector с указанием конфигурационного файла.
+- Настраивает конфигурационный файл Vector из шаблона `vector.toml.j2`.
+
+## Параметры и теги playbook:
+
+### Параметры (hosts):
+- `clickhouse`: Хосты, на которых устанавливается Clickhouse.
+- `Vector`: Хосты, на которых устанавливается и настраивается Vector.
+
+### Теги:
+- **download**: Задачи, связанные с загрузкой архива Vector.
+- **unarchive**: Задачи, связанные с распаковкой архива Vector.
+- **install**: Задачи, связанные с установкой исполняемых файлов Vector.
+- **systemd**: Задачи, связанные с созданием systemd-службы для Vector.
+- **configure**: Задачи, связанные с настройкой конфигурационного файла Vector.
+
+## Пример использования:
+
+```bash
+ansible-playbook -i inventory/prod.yml site.yml --tags "download, unarchive, install, configure, systemd, restart"
+```
+
+
+## Скриншоты выполнения заданий 5-8
+
+5. ![ansible-lint](https://github.com/karapuze/netology_ansible/blob/main/2_Homework/img/ansible-lint.png)
+6. Не понял на каком "на этом окружении" выполнять? Выполнил без указания inventory файла, ожидаемо получил ошибку, т.к. нет групп хостов используемых в плее.
+7. ![first diff](https://github.com/karapuze/netology_ansible/blob/main/2_Homework/img/first%20diff.png)
+8. ![second diff](https://github.com/karapuze/netology_ansible/blob/main/2_Homework/img/second%20diff.png)
