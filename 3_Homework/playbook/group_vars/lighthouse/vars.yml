@@ -1,0 +1,3 @@
+---
+nginx_server_name: "example.com"
+lighthouse_port: 8080
